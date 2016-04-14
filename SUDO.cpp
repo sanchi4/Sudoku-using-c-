@@ -3,8 +3,8 @@
 //*******************************************************
 #include <iostream>
 #include<fstream>
-#include<Windows.h>
-#include <cstdlib>
+#include<stdlib.h>
+#include<stdio.h>
 #include<time.h>
 #define UNASSIGNED 0
 #define size 9
@@ -42,9 +42,9 @@ void Sudoku::replace_ele(int a,int b,int num)
 {
     if(fault[a-1][b-1]==true)
         grid[a-1][b-1]=num;
-    if(!isSafe(a-1,b-1,num))
+    if(!isSafe(a-1,b-1,num) && grid[a-1][b-1]==0)
         fault[a-1][b-1]=true;
-    else fault[a-1][b-1]=true;
+    else fault[a-1][b-1]=false;
     if(grid[a-1][b-1]==0)
         grid[a-1][b-1]=num;
 }
@@ -122,37 +122,26 @@ void Sudoku::printGrid()
         {
             for (int col = 0; col < size; col++)
             {
-                HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-                SetConsoleTextAttribute(h, FOREGROUND_RED  | FOREGROUND_INTENSITY);
                 if(col==3 || col==6 )
-                    cout<<"|-";
-                    cout<<"---";
+		    cout << "\033[1;31m|-\033[0m";
+                    cout<<"\033[1;31m--\033[0m";;
             }
             cout<<endl<<" " ;
         }
-        HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(h,FOREGROUND_BLUE | FOREGROUND_GREEN  | FOREGROUND_INTENSITY);
         for (int col = 0; col < size; col++)
         {
             if(col==3 || col==6 )
             {
-                HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-                SetConsoleTextAttribute(h, FOREGROUND_RED  | FOREGROUND_INTENSITY);
-                cout<<"| ";
+          	cout << "\033[1;31m| \033[0m";
             }
-            HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-            SetConsoleTextAttribute(h,FOREGROUND_BLUE | FOREGROUND_GREEN  | FOREGROUND_INTENSITY);
             if(grid[row][col]==0)
             {
-                HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-                SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY );
-                cout<<grid[row][col]<<"  ";
+                cout << "\033[1;33m"<<grid[row][col]<<" \033[0m";
             }
             else
             {
-                HANDLE h =GetStdHandle(STD_OUTPUT_HANDLE);
-                SetConsoleTextAttribute(h,FOREGROUND_BLUE | FOREGROUND_GREEN  | FOREGROUND_INTENSITY);
-                cout<<grid[row][col]<<"  ";
+                
+                cout << "\033[1;36m"<<grid[row][col]<<" \033[0m";
             }
         }
         cout<<endl<<" ";
@@ -161,7 +150,7 @@ void Sudoku::printGrid()
 
 void clear()
 {
-    system("cls");
+    system("clear");
 }
 
 //***********************************************************
@@ -172,7 +161,7 @@ int main()
 {
     fstream ifile;
     int x=0,y=0,choose;
-    ifile.open("C:/Users/sanchi/Desktop/sudo.txt",ios::in);
+    ifile.open("/root/Desktop/c++/sudo.txt",ios::in);
     int a[9][9],n,posx,posy;
     srand(time(NULL));
     choose=rand()%10;
@@ -189,15 +178,17 @@ int main()
                 ifile.seekp(1,ios::cur);
     }
     Sudoku b(a);
-    char ch;int flag=0;
+    int flag=0;
     do
     {
         clear();
         b.printGrid();
-        cout<<"\nEnter the element to be inserted : ";
+	cout << "\033[1;32mEnter the element to be inserted(-1 to quit) : \033[0m";
         cin>>n;
+	if(n==-1)
+	    break;
         int f=0;
-        cout<<"Enter its position : ";
+        cout<<"\033[1;32mEnter its position : \033[0m";
         cin>>posx>>posy;
         b.replace_ele(posx,posy,n);
         if(!b.FindUnassignedLocation(x,y))
@@ -208,17 +199,16 @@ int main()
                     if(fault[i][j]==true)
                     f++;
             if(f==0)
-            cout<<"\n\t\tYou solved it !!\n\t\t    You won !!"<<endl;
+            {
+                clear();
+                b.printGrid();
+                    cout<<"\033[1;35m\n\t\tYou solved it !!\n\t\t    You won !!\033[0m"<<endl;
+            }
             else
-                cout<<"\n\t\tYou could not solve it !!\n\t\t     You lost !!"<<endl;
+                cout<<"\033[1;35m\n\t\tYou could not solve it !!\n\t\t     You lost !!\033[0m"<<endl;
             break;
         }
-        else
-        {
-            cout<<"Do you want to continue : ";
-            cin>>ch;
-        }
-    }while(ch=='y' || ch=='Y');
+    }while(n!=-1);
     if(!flag)
     {
         clear();
@@ -227,7 +217,7 @@ int main()
           b.printGrid();
         else
             cout<<"No solution exists"<<endl;
-        cout<<"\n\t\tYou could not solve it !!\n\t\t You lost !!"<<endl;
+	cout<<"\033[1;35m\n\t\tYou could not solve it !!\n\t\t     You lost !!\033[0m"<<endl;
     }
     return 0;
 }
