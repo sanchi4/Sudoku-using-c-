@@ -115,19 +115,23 @@ bool Sudoku::isSafe(int row, int col, int num)
 
 void Sudoku::printGrid()
 {
+    cout<<"\n     1 2 3   4 5 6   7 8 9 ";
+    cout<<"\n\033[1;31m   -------------------------\033[0m";
     cout<<"\n ";
     for (int row = 0; row < size; row++)
     {
         if(row==3 || row==6 )
         {
+	    cout<<"\033[1;31m  |-\033[0m";	
             for (int col = 0; col < size; col++)
             {
                 if(col==3 || col==6 )
 		    cout << "\033[1;31m|-\033[0m";
                     cout<<"\033[1;31m--\033[0m";;
             }
-            cout<<endl<<" " ;
+            cout<<"\033[1;31m|\033[0m"<<endl<<" " ;
         }
+	cout<<row+1<<"\033[1;31m | \033[0m";
         for (int col = 0; col < size; col++)
         {
             if(col==3 || col==6 )
@@ -136,16 +140,17 @@ void Sudoku::printGrid()
             }
             if(grid[row][col]==0)
             {
-                cout << "\033[1;33m"<<grid[row][col]<<" \033[0m";
+                cout << "\033[1;36m"<<grid[row][col]<<" \033[0m";
             }
             else
             {
                 
-                cout << "\033[1;36m"<<grid[row][col]<<" \033[0m";
+                cout << "\033[1;33m"<<grid[row][col]<<" \033[0m";
             }
         }
-        cout<<endl<<" ";
+	cout<<"\033[1;31m|\033[0m"<<endl<<" ";
     }
+    cout<<"\033[1;31m  -------------------------\033[0m\n";
 }
 
 void clear()
@@ -161,7 +166,7 @@ int main()
 {
     fstream ifile;
     int x=0,y=0,choose;
-    ifile.open("/root/Desktop/c++/sudo.txt",ios::in);
+    ifile.open("/root/Desktop/c++/SUDOKU_LINUX/sudo.txt",ios::in);
     int a[9][9],n,posx,posy;
     srand(time(NULL));
     choose=rand()%10;
